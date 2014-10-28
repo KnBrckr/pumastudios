@@ -41,7 +41,7 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 		 */
 		function __construct()
 		{
-			// Run the nit during WP init processing
+			// Run the init during WP init processing
 			add_action('init', array($this, 'wp_init'));
 		}
 
