@@ -16,6 +16,10 @@ Supports the following shortcodes:
 
 class defaults to 'page-children'
 
+Also takes care of various fixups:
+
+* Hide the woocommerce "Install Updater Plugin" message
+
 == Installation ==
 
 Just like any other plugin

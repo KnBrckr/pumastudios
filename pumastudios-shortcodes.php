@@ -54,7 +54,9 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 		{
 			// Define Short Codes
 			add_shortcode("page-children",array($this, "sc_page_children"));
-			
+						
+			// Take care of woocommerce customizations
+			add_action('wp_loaded', array($this, 'woocommerce_customize'));
 		}
 				
 		/**
@@ -86,6 +88,17 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 			}
 			$text .= "</ul>";
 			return $text;
+		}
+		
+		/**
+		 * Take care of some WooCommerce customizations
+		 *
+		 * @return void
+		 */
+		function woocommerce_customize()
+		{
+			// Remove annoy message to install wootheme updater
+			remove_action( 'admin_notices', 'woothemes_updater_notice' );
 		}
 	}
 }
