@@ -12,9 +12,10 @@ Various Short codes
 
 Supports the following shortcodes:
 
-= [page-children class=<class>]
+= [page-children class=<class> page_id=<id>]
 
 class defaults to 'page-children'
+page_id defaults to the current page
 
 Also takes care of various fixups:
 
