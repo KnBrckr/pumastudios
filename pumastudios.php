@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: Puma Studios Shortcodes
-Plugin URI: http://pumastudios.com/software/
-Description: My Shortcodes
-Version: 0.2
+Plugin Name: Puma Studios
+Plugin URI: https://github.com/KnBrckr/pumastudios
+Description: Site Specific Tweaks and Shortcodes
+Version: 0.2.1
 Author: Kenneth J. Brucker
-Author URI: http://pumastudios.com/
-Text Domain: pumastudios-shortcodes
+Author URI: http://action-a-day.com
+Text Domain: pumastudios
 
-Copyright: 2016 Kenneth J. Brucker (email: ken@pumastudios.com)
+Copyright: 2016 Kenneth J. Brucker (email: ken.brucker@action-a-day.com)
 
 This file is part of shortcodes, a plugin for Wordpress.
 
@@ -33,13 +33,13 @@ if (!defined('WP_PLUGIN_DIR')) {
   exit();
 }
 
-global $pumastudios_shortcodes;
+global $pumastudios;
 
 // ===============================
 // = Define the shortcodes class =
 // ===============================
-if ( ! class_exists('pumastudios_shortcodes')) {
-	class pumastudios_shortcodes {
+if ( ! class_exists('pumastudios')) {
+	class pumastudios {
 		
 		/**
 		 * Constructor function
@@ -125,27 +125,30 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 		}
 		
 		/**
-		 * Send correct scheme (http/https) for admin-ajax.php
+		 * Fix scheme (http/https) used for admin-ajax.php
 		 *
 		 * If FORCE_SSL_ADMIN is set, admin_url() will return a URL with https scheme, even if
-		 * the remainder of a front-end is using http.
+		 * the front-end is using http.
 		 *
-		 * Cookies sent via https are secure and not available to http: content which can break some AJAX features.
+		 * Cookies sent via https are secure by default and not available to http: content.
+		 * This can break some AJAX features.
 		 *
 		 * @param string   $url     The complete admin area URL including scheme and path.
 		 * @param string   $path    Path relative to the admin area URL. Blank string if no path is specified.
 		 * @param int|null $blog_id Site ID, or null for the current site.
 		 * @return string  Repaired Admin URL
-		 * @author Kenneth J. Brucker <ken.brucker@action-a-day.com>
 		 */
 		function fix_admin_ajax_url($url, $path, $blog_id)
 		{
 			/**
 			 * Replace https with http if current request not using SSL
+			 *
+			 * set_url_scheme will override and use https if is_ssl() is true
 			 */
-		    if ( $path == 'admin-ajax.php' && is_ssl() == FALSE ) {
-		        return str_replace( 'https:', 'http:', $url );
+		    if ( $path == 'admin-ajax.php' ) {
+				return set_url_scheme( $url, 'http' );
 		    }
+			
 		    return $url;
 		}
 	}
@@ -155,6 +158,6 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 // = Plugin initialization =
 // =========================
 
-$pumastudios_shortcodes = new pumastudios_shortcodes();
+$pumastudios = new pumastudios();
 
 ?>

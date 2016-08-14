@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.5.3
-Stable tag: 0.2
+Stable tag: 0.2.1
 
 Various Short codes
 
@@ -40,6 +40,11 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.2.1 =
+
+* Rename plugin
+* Use set_url_scheme() to cleanup AJAX url
 
 = 0.2 =
 
