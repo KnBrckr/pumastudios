@@ -3,12 +3,12 @@
 Plugin Name: Puma Studios Shortcodes
 Plugin URI: http://pumastudios.com/software/
 Description: My Shortcodes
-Version: 0.1
+Version: 0.2
 Author: Kenneth J. Brucker
 Author URI: http://pumastudios.com/
 Text Domain: pumastudios-shortcodes
 
-Copyright: 2014 Kenneth J. Brucker (email: ken@pumastudios.com)
+Copyright: 2016 Kenneth J. Brucker (email: ken@pumastudios.com)
 
 This file is part of shortcodes, a plugin for Wordpress.
 
@@ -49,6 +49,7 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 		function __construct()
 		{
 			// Run the init during WP init processing
+			// FIXME Don't do init in __construct, makes it difficult to unit test outside WP
 			add_action('init', array($this, 'wp_init'));
 		}
 
@@ -59,11 +60,24 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 		 */
 		function wp_init() 
 		{
-			// Define Short Codes
+			/**
+			 * Define Short Codes
+			 */
 			add_shortcode("page-children",array($this, "sc_page_children"));
 						
-			// Take care of woocommerce customizations
+			/**
+			 * Take care of woocommerce customizations
+			 */
 			add_action('wp_loaded', array($this, 'woocommerce_customize'));
+			
+			/**
+			 * Filter admin_url scheme when SSL is not being used.
+			 *
+			 * Only required if FORCE_SSL_ADMIN is enabled
+			 */
+			if ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ) {
+				add_filter( 'admin_url', array($this, 'fix_admin_ajax_url' ), 10, 3 );
+			}
 		}
 				
 		/**
@@ -104,8 +118,35 @@ if ( ! class_exists('pumastudios_shortcodes')) {
 		 */
 		function woocommerce_customize()
 		{
-			// Remove annoy message to install wootheme updater
+			/**
+			 * Remove annoy message to install wootheme updater
+			 */
 			remove_action( 'admin_notices', 'woothemes_updater_notice' );
+		}
+		
+		/**
+		 * Send correct scheme (http/https) for admin-ajax.php
+		 *
+		 * If FORCE_SSL_ADMIN is set, admin_url() will return a URL with https scheme, even if
+		 * the remainder of a front-end is using http.
+		 *
+		 * Cookies sent via https are secure and not available to http: content which can break some AJAX features.
+		 *
+		 * @param string   $url     The complete admin area URL including scheme and path.
+		 * @param string   $path    Path relative to the admin area URL. Blank string if no path is specified.
+		 * @param int|null $blog_id Site ID, or null for the current site.
+		 * @return string  Repaired Admin URL
+		 * @author Kenneth J. Brucker <ken.brucker@action-a-day.com>
+		 */
+		function fix_admin_ajax_url($url, $path, $blog_id)
+		{
+			/**
+			 * Replace https with http if current request not using SSL
+			 */
+		    if ( $path == 'admin-ajax.php' && is_ssl() == FALSE ) {
+		        return str_replace( 'https:', 'http:', $url );
+		    }
+		    return $url;
 		}
 	}
 }

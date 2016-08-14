@@ -3,8 +3,8 @@ Contributors: draca
 Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
-Tested up to: 4.0
-Stable tag: 0.1
+Tested up to: 4.5.3
+Stable tag: 0.2
 
 Various Short codes
 
@@ -20,6 +20,7 @@ page_id defaults to the current page
 Also takes care of various fixups:
 
 * Hide the woocommerce "Install Updater Plugin" message
+* Cleanup admin-ajax.php when FORCE_SSL_ADMIN is set
 
 == Installation ==
 
@@ -40,6 +41,11 @@ Just like any other plugin
 
 == Changelog ==
 
+= 0.2 =
+
+* Cleanup admin-ajax.php when FORCE_SSL_ADMIN is set
+
 = 0.1 =
 
+* Remove woocommerce update notifier
 * Introduced page-children short code
