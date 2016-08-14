@@ -12,10 +12,12 @@ Various Short codes
 
 Supports the following shortcodes:
 
-= [page-children class=<class> page_id=<id>]
+= [page-children class=<class> page_id=<id> order_by=<order>]
 
 class defaults to 'page-children'
 page_id defaults to the current page
+order_by defaults to 'title', can be 'title', 'date', or 'order'
+  'order' will order by page order setting on the pages.
 
 Also takes care of various fixups:
 
@@ -45,6 +47,7 @@ Just like any other plugin
 
 * Rename plugin
 * Use set_url_scheme() to cleanup AJAX url
+* Add order_by option to page-children shortcode
 
 = 0.2 =
 

@@ -85,7 +85,7 @@ if ( ! class_exists('pumastudios')) {
 		 *
 		 * Implements shortcode [page-children]
 		 * 
-		 * [page-children class=<class>]
+		 * [page-children class=<class> page_id=<id> order_by=<order>]
 		 *
 		 * @return text HTML list containing entries for each child of the current page.
 		 **/
@@ -93,17 +93,31 @@ if ( ! class_exists('pumastudios')) {
 		{
 			global $id;
 
+			/**
+			 * Retrieve shortcode attributes
+			 */
 			extract(shortcode_atts(array(
 				"page_id" => $id,
-				"class" => 'page-children'
+				"class" => 'page-children',
+				"order_by" => 'title'
 			), $atts));
+			
+			/**
+			 * Sanitize fields
+			 */
+			$page_id = ( int ) $page_id;
+			$order_by = in_array( $order_by, array( 'title', 'order', 'date' ) ) ? $order_by : 'title';
+			if ( 'order' == $order_by ) $order_by = 'menu_order';
 
-			$children_of_page = get_children(array("post_parent"=>$page_id, "post_type"=>"page", "orderby" => 'title', "order" => "ASC", "post_status" => "publish"));
+			/**
+			 * Collect children of target page
+			 */
+			$children_of_page = get_children(array("post_parent"=>$page_id, "post_type"=>"page", "orderby" => $order_by, "order" => "ASC", "post_status" => "publish"));
 			if (empty($children_of_page)) {
 				return "";
 			}
 
-			$text = "<ul class=$class>";
+			$text = "<ul class=" . esc_attr( $class ) . ">";
 			foreach ($children_of_page as $child_post) {
 				$text .= "<li><a href='".get_bloginfo('wpurl')."/".get_page_uri($child_post->ID)."'> $child_post->post_title </a></li>";
 			}
