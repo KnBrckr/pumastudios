@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.5.3
-Stable tag: 0.2.2
+Stable tag: 0.2.3
 
 Various Short codes
 
@@ -42,6 +42,10 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.2.3 =
+
+* Use force_ssl_admin() like other parts of WordPress
 
 = 0.2.2 =
 

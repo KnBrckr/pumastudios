@@ -3,7 +3,7 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.2.2
+Version: 0.2.3
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
 Text Domain: pumastudios
@@ -75,7 +75,7 @@ if ( ! class_exists('pumastudios')) {
 			 *
 			 * Only required if FORCE_SSL_ADMIN is enabled
 			 */
-			if ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ) {
+			if ( force_ssl_admin() ) {
 				add_filter( 'admin_url', array($this, 'fix_admin_ajax_url' ), 10, 3 );
 			}
 		}
