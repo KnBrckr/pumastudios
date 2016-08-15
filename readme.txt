@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.5.3
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 
 Various Short codes
 
@@ -42,6 +42,10 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.2.2 =
+
+* Incorrectly setting admin-ajax.php to always use http protocol
 
 = 0.2.1 =
 

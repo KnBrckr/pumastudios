@@ -3,7 +3,7 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.2.1
+Version: 0.2.2
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
 Text Domain: pumastudios
@@ -155,12 +155,10 @@ if ( ! class_exists('pumastudios')) {
 		function fix_admin_ajax_url($url, $path, $blog_id)
 		{
 			/**
-			 * Replace https with http if current request not using SSL
-			 *
-			 * set_url_scheme will override and use https if is_ssl() is true
+			 * Scheme for admin-ajax.php should match scheme for current page
 			 */
 		    if ( $path == 'admin-ajax.php' ) {
-				return set_url_scheme( $url, 'http' );
+				return set_url_scheme( $url, is_ssl() ? 'https' : 'http' );
 		    }
 			
 		    return $url;
