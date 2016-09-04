@@ -76,8 +76,13 @@ if ( ! class_exists('pumastudios')) {
 			 * Only required if FORCE_SSL_ADMIN is enabled
 			 */
 			if ( force_ssl_admin() ) {
-				add_filter( 'admin_url', array($this, 'fix_admin_ajax_url' ), 10, 3 );
+				add_filter( 'admin_url', array( $this, 'fix_admin_ajax_url' ), 10, 3 );
 			}
+			
+			/**
+			 * Adjust slug for uploaded files to include mime type
+			 */
+			add_filter( 'wp_insert_attachment_data', array( $this, 'filter_attachment_slug' ), 10, 2 );
 		}
 				
 		/**
@@ -162,6 +167,44 @@ if ( ! class_exists('pumastudios')) {
 		    }
 			
 		    return $url;
+		}
+		
+		/**
+		 * Filter attachment post data before it is added to the database
+		 *  - Add mime type to post_name to reduce slug collisions
+		 *
+		 * @param array $data    Array of santized attachment post data
+		 * @param array $postarr Array of unsanitized attachment post data
+ 		 * @return $data, array of post data
+		 */
+		function filter_attachment_slug($data, $postarr)
+		{
+			/**
+			 * Only work on attachment types
+			 */
+			if ( ! array_key_exists( 'post_type', $data ) || 'attachment' != $data['post_type'] )
+				return $data;
+			
+			/**
+			 * Add mime type to the post title to build post-name
+			 */
+			$post_title = array_key_exists( 'post_title', $data ) ? $data['post_title'] : $postarr['post_title'];
+			$post_mime_type = array_key_exists( 'post_mime_type', $data ) ? $data['post_mime_type'] : $postarr['post_mime_type'];
+			$post_mime_type = str_replace( '/', '-', $post_mime_type );
+			$post_name = sanitize_title( $post_title . '-' . $post_mime_type );
+			
+			/**
+			 * Generate unique slug for post name
+			 */
+			$post_ID = array_key_exists( 'ID', $data ) ? $data['ID'] : $postarr['ID'];
+			$post_status = array_key_exists( 'post_status', $data ) ? $data['post_status'] : $postarr['post_status'];
+			$post_type = array_key_exists( 'post_type', $data ) ? $data['post_type'] : $postarr['post_type'];
+			$post_parent = array_key_exists( 'post_parent', $data ) ? $data['post_parent'] : $postarr['post_parent'];
+			
+			$post_name = wp_unique_post_slug( $post_name, $post_ID, $post_status, $post_type, $post_parent );
+			$data['post_name'] = $post_name;
+			
+			return $data;
 		}
 	}
 }
