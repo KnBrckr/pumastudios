@@ -145,7 +145,7 @@ if ( ! class_exists('pumastudios')) {
 		 * the front-end is using http.
 		 *
 		 * Cookies sent via https are secure by default and not available to http: content.
-		 * This can break some AJAX features.
+		 * This can break some site features served by AJAX.
 		 *
 		 * @param string   $url     The complete admin area URL including scheme and path.
 		 * @param string   $path    Path relative to the admin area URL. Blank string if no path is specified.
