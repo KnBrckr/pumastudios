@@ -43,6 +43,10 @@ Just like any other plugin
 
 == Changelog ==
 
+= 0.3 =
+
+* Use setup() method to hook WP vs. __construct()
+
 = 0.2.3 =
 
 * Use force_ssl_admin() like other parts of WordPress

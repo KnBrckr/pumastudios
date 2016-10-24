@@ -3,27 +3,16 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.2.3
+Version: 0.3
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
+Domain Path: /languages
 Text Domain: pumastudios
 
 Copyright: 2016 Kenneth J. Brucker (email: ken.brucker@action-a-day.com)
 
-This file is part of shortcodes, a plugin for Wordpress.
+This file is part of pumastudios site modifications, a plugin for Wordpress.
 
-Shortcodes is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Shortcodes is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Shortcodes.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Protect from direct execution
@@ -42,14 +31,13 @@ if ( ! class_exists('pumastudios')) {
 	class pumastudios {
 		
 		/**
-		 * Constructor function
+		 * Setup Plugin in WP context - must be called after instatiating object
 		 *
 		 * @return void
 		 */
-		function __construct()
+		function setup()
 		{
 			// Run the init during WP init processing
-			// FIXME Don't do init in __construct, makes it difficult to unit test outside WP
 			add_action('init', array($this, 'wp_init'));
 		}
 
@@ -214,5 +202,6 @@ if ( ! class_exists('pumastudios')) {
 // =========================
 
 $pumastudios = new pumastudios();
+$pumastudios->setup();
 
 ?>
