@@ -45,6 +45,7 @@ Just like any other plugin
 
 = 0.3 =
 
+* Remove Thrive Themes clone option from product list
 * Use setup() method to hook WP vs. __construct()
 
 = 0.2.3 =

@@ -51,12 +51,12 @@ if ( ! class_exists('pumastudios')) {
 			/**
 			 * Define Short Codes
 			 */
-			add_shortcode("page-children",array($this, "sc_page_children"));
+			add_shortcode( "page-children", array($this, "sc_page_children") );
 						
 			/**
 			 * Take care of woocommerce customizations
 			 */
-			add_action('wp_loaded', array($this, 'woocommerce_customize'));
+			add_action( 'wp_loaded', array($this, 'woocommerce_customize') );
 			
 			/**
 			 * Filter admin_url scheme when SSL is not being used.
@@ -71,6 +71,13 @@ if ( ! class_exists('pumastudios')) {
 			 * Adjust slug for uploaded files to include mime type
 			 */
 			add_filter( 'wp_insert_attachment_data', array( $this, 'filter_attachment_slug' ), 10, 2 );
+			
+			/**
+			 * Remove Thrive Themes 'clone' option from WooCommerce products
+			 */
+			if ( is_admin() ) {
+				add_action( 'load-edit.php', array( $this, 'remove_thrive_duplicate_link_row' ));
+			}
 		}
 				
 		/**
@@ -116,6 +123,21 @@ if ( ! class_exists('pumastudios')) {
 			}
 			$text .= "</ul>";
 			return $text;
+		}
+		
+		/**
+		 * For Product pages, remove the duplicate link that Thrive would add
+		 */
+		function remove_thrive_duplicate_link_row()
+		{
+			$screen = get_current_screen();
+			
+			if ( !$screen ) return;
+			
+			if ( 'product' == $screen->post_type ) {
+				remove_filter( 'post_row_actions', 'thrive_make_duplicate_link_row', 10 );
+				remove_filter( 'page_row_actions', 'thrive_make_duplicate_link_row', 10 );
+			}
 		}
 		
 		/**
