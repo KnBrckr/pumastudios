@@ -56,7 +56,9 @@ if ( ! class_exists('pumastudios')) {
 			/**
 			 * Take care of woocommerce customizations
 			 */
-			add_action( 'wp_loaded', array($this, 'woocommerce_customize') );
+			if ( class_exists( 'WooCommerce' ) ) {
+				add_action( 'wp_loaded', array($this, 'woocommerce_customize') );			
+			}
 			
 			/**
 			 * Filter admin_url scheme when SSL is not being used.
@@ -151,6 +153,27 @@ if ( ! class_exists('pumastudios')) {
 			 * Remove annoy message to install wootheme updater
 			 */
 			remove_action( 'admin_notices', 'woothemes_updater_notice' );
+			
+			/**
+			 * Change Backorder text
+			 */
+			// add_filter( 'woocommerce_get_availability', array( $this, 'woo_change_backorder_text' ), 100, 2 );
+		}
+		
+		/**
+		 * Change "backorder" text
+		 * 
+		 * @param array $availability
+		 * @param WC_Product $product
+		 * @return array
+		 */
+		function woo_change_backorder_text( $availability, $product )
+		{
+			if ( 'available-on-backorder' == $availability['class'] ) {
+				$availability['availability'] = 'Made to Order'; 
+			}
+			
+			return $availability;
 		}
 		
 		/**

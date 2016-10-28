@@ -45,6 +45,7 @@ Just like any other plugin
 
 = 0.3 =
 
+* Create function to change "Backorder" text on front end - not enabled
 * Remove Thrive Themes clone option from product list
 * Use setup() method to hook WP vs. __construct()
 
