@@ -43,6 +43,9 @@ Just like any other plugin
 
 == Changelog ==
 
+= 0.4 =
+* Include excerpt box on page edit screen
+
 = 0.3 =
 
 * Create function to change "Backorder" text on front end - not enabled
