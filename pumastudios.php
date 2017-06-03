@@ -58,6 +58,11 @@ if ( ! class_exists('pumastudios')) {
 			 */
 			if ( class_exists( 'WooCommerce' ) ) {
 				add_action( 'wp_loaded', array($this, 'woocommerce_customize') );
+			
+				/**
+				 * Add a woocommerce filter to enable the use of Document Manager documents as downloadable content
+				 */
+				add_filter( 'woocommerce_downloadable_file_exists', array( $this, 'filter_woo_downloadable_file_exists' ), 10, 2 );
 			}
 
 			/**
@@ -164,11 +169,6 @@ if ( ! class_exists('pumastudios')) {
 			 * Change Backorder text
 			 */
 			// add_filter( 'woocommerce_get_availability', array( $this, 'woo_change_backorder_text' ), 100, 2 );
-			
-			/**
-			 * Add a woocommerce filter to enable the use of Document Manager documents as downloadable content
-			 */
-			add_filter( 'woocommerce_downloadable_file_exists', array( $this, 'filter_woo_downloadable_file_exists' ), 10, 2 );
 		}
 		
 		/**
