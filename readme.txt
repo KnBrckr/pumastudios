@@ -43,6 +43,9 @@ Just like any other plugin
 
 == Changelog ==
 
+= 0.5 =
+* WooCommerce files are not able to be located in /content vs. /wp-content
+
 = 0.4 =
 * Include excerpt box on page edit screen
 

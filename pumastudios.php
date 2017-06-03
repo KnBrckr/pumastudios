@@ -3,7 +3,7 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.4
+Version: 0.5
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
 Domain Path: /languages
@@ -164,7 +164,30 @@ if ( ! class_exists('pumastudios')) {
 			 * Change Backorder text
 			 */
 			// add_filter( 'woocommerce_get_availability', array( $this, 'woo_change_backorder_text' ), 100, 2 );
+			
+			/**
+			 * Add a woocommerce filter to enable the use of Document Manager documents as downloadable content
+			 */
+			add_filter( 'woocommerce_downloadable_file_exists', array( $this, 'filter_woo_downloadable_file_exists' ), 10, 2 );
 		}
+		
+		/**
+		 * Allow WooCommerce to understand 
+		 *
+		 * Uses filter defined in class-wc-product-download.php:file_exists()
+		 *
+		 * @param boolean $file_exists Earlier filters may have already decided if file exists
+		 * @param string $file_url path to the downloadable file
+		 */
+		function filter_woo_downloadable_file_exists( $file_exists, $file_url ) {
+			if ( '/content' === substr( $file_url, 0, 8 ) ) {
+				$filepath = realpath( WP_CONTENT_DIR . substr( $file_url, 8 ) );
+				return file_exists( $filepath );
+			}
+			
+			return $file_exists;
+		}
+
 
 		/**
 		 * Change "backorder" text
