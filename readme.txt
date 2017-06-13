@@ -3,7 +3,7 @@ Contributors: draca
 Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
-Tested up to: 4.5.3
+Tested up to: 4.7.4
 Stable tag: 0.2.3
 
 Various Short codes
@@ -23,14 +23,15 @@ Also takes care of various fixups:
 
 * Hide the woocommerce "Install Updater Plugin" message
 * Cleanup admin-ajax.php when FORCE_SSL_ADMIN is set
+* Include excerpt box on page edit screen - Useful for member-only content
+* Auto-complete purchase of subscriptions for virtual products
+* Allow WooCommerce download files to be in alternate /content directory
 
 == Installation ==
 
 Just like any other plugin
 
 = Usage Hints =
-
-
 
 = Reporting Problems =
 
@@ -42,6 +43,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.6 =
+* WooCommerce does not auto-complete virtual subscriptions
 
 = 0.5 =
 * WooCommerce files are not able to be located in /content vs. /wp-content

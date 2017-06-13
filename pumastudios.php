@@ -3,7 +3,7 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.5
+Version: 0.6
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
 Domain Path: /languages
@@ -54,13 +54,26 @@ if ( ! class_exists('pumastudios')) {
 			add_shortcode( "page-children", array($this, "sc_page_children") );
 
 			/**
-			 * Take care of woocommerce customizations
+			 * WooCommerce customizations
 			 */
 			if ( class_exists( 'WooCommerce' ) ) {
-				add_action( 'wp_loaded', array($this, 'woocommerce_customize') );
-			
 				/**
-				 * Add a woocommerce filter to enable the use of Document Manager documents as downloadable content
+				 * Remove annoy message to install wootheme updater
+				 */
+				remove_action( 'admin_notices', 'woothemes_updater_notice' );
+
+				/**
+				 * Virtual Subscription product types do not need to be processed
+				 */
+				add_filter( 'woocommerce_order_item_needs_processing' , array( $this, 'filter_woo_item_needs_processing' ), 10, 3 );
+
+				/**
+				 * Change Backorder text
+				 */
+				// add_filter( 'woocommerce_get_availability', array( $this, 'woo_change_backorder_text' ), 100, 2 );
+
+				/**
+				 * Add a woocommerce filter to allow content to exist in an alternate content directory
 				 */
 				add_filter( 'woocommerce_downloadable_file_exists', array( $this, 'filter_woo_downloadable_file_exists' ), 10, 2 );
 			}
@@ -154,25 +167,7 @@ if ( ! class_exists('pumastudios')) {
 		}
 
 		/**
-		 * Take care of some WooCommerce customizations
-		 *
-		 * @return void
-		 */
-		function woocommerce_customize()
-		{
-			/**
-			 * Remove annoy message to install wootheme updater
-			 */
-			remove_action( 'admin_notices', 'woothemes_updater_notice' );
-
-			/**
-			 * Change Backorder text
-			 */
-			// add_filter( 'woocommerce_get_availability', array( $this, 'woo_change_backorder_text' ), 100, 2 );
-		}
-		
-		/**
-		 * Allow WooCommerce to understand 
+		 * Allow WooCommerce to understand content in alternate content directory
 		 *
 		 * Uses filter defined in class-wc-product-download.php:file_exists()
 		 *
@@ -180,6 +175,9 @@ if ( ! class_exists('pumastudios')) {
 		 * @param string $file_url path to the downloadable file
 		 */
 		function filter_woo_downloadable_file_exists( $file_exists, $file_url ) {
+			/**
+			 * Hard-coded string based on setting of WP_CONTENT_URL defined on server
+			 */
 			if ( '/content' === substr( $file_url, 0, 8 ) ) {
 				$filepath = realpath( WP_CONTENT_DIR . substr( $file_url, 8 ) );
 				return file_exists( $filepath );
@@ -187,7 +185,27 @@ if ( ! class_exists('pumastudios')) {
 			
 			return $file_exists;
 		}
-
+		
+		/**
+		 * Virtual Subscription products do not need to be processed after payment is received. They can move
+		 * directly to the 'completed' status.
+		 * 
+		 * Uses filter defined in class-wc-order.php:needs_processing()
+		 * 
+		 * @param boolean $needs_processing default return value to pass along
+		 * @param WC_product $product Product item to check
+		 * @param string $order_ID ID for the containing order
+		 * @return boolean
+		 */
+		function filter_woo_item_needs_processing( $needs_processing, $product, $order_ID ) {
+			$product_type = $product->get_type();
+			if ( $product->is_virtual() 
+			&& ( 'subscription' == $product_type || 'subscription_variation' == $product_type || 'variable-subscription' == $product_type ) ) {
+				return false;
+			}
+			
+			return $needs_processing;
+		}
 
 		/**
 		 * Change "backorder" text
