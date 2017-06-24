@@ -3,7 +3,7 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.6
+Version: 0.7
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
 Domain Path: /languages
@@ -76,6 +76,8 @@ if ( ! class_exists('pumastudios')) {
 				 * Add a woocommerce filter to allow content to exist in an alternate content directory
 				 */
 				add_filter( 'woocommerce_downloadable_file_exists', array( $this, 'filter_woo_downloadable_file_exists' ), 10, 2 );
+				
+				add_filter( 'woocommerce_get_price_html', array( $this, 'filter_woo_free_with_subscription' ), 10, 2 );
 			}
 
 			/**
@@ -221,6 +223,27 @@ if ( ! class_exists('pumastudios')) {
 			}
 
 			return $availability;
+		}
+		
+		/**
+		 * If product has zero cost and is available via subscription, indicate so
+		 * 
+		 * @param string $_price HTML text to display for price
+		 * @param WC_Product $product
+		 * @return string HTML text to display for price
+		 */
+		public function filter_woo_free_with_subscription( $_price, $product ) {			
+			$price = $product->get_price();
+			
+			if ( ( '' === $price || 0 == $price ) ) {
+				$_price = "Free!";
+				if ( class_exists( 'WC_Subscription_Downloads' )
+				&& count( WC_Subscription_Downloads::get_subscriptions( $product->id ) ) ) {
+					$_price = "Free with Membership!";
+				}				
+			}
+			
+			return $_price;
 		}
 
 		/**
