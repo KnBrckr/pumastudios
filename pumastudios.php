@@ -77,7 +77,14 @@ if ( ! class_exists('pumastudios')) {
 				 */
 				add_filter( 'woocommerce_downloadable_file_exists', array( $this, 'filter_woo_downloadable_file_exists' ), 10, 2 );
 				
-				add_filter( 'woocommerce_get_price_html', array( $this, 'filter_woo_free_with_subscription' ), 10, 2 );
+				/**
+				 * Add hooks for handling downloads that are included as a part of a subscription
+				 */
+				if ( class_exists( 'WC_Subscription_Downloads' ) ) {
+					add_filter( 'woocommerce_get_price_html', array( $this, 'filter_woo_price_free_with_subscription' ), 10, 2 );
+					add_filter( 'woocommerce_is_purchasable', array( $this, 'filter_woo_not_purchasable' ), 10, 2 );					
+					add_action( 'woocommerce_single_product_summary', array( $this, 'action_woo_available_downloads' ), 30);
+				}
 			}
 
 			/**
@@ -226,24 +233,78 @@ if ( ! class_exists('pumastudios')) {
 		}
 		
 		/**
-		 * If product has zero cost and is available via subscription, indicate so
+		 * If product is included via subscription, indicate so
 		 * 
 		 * @param string $_price HTML text to display for price
 		 * @param WC_Product $product
 		 * @return string HTML text to display for price
 		 */
-		public function filter_woo_free_with_subscription( $_price, $product ) {			
-			$price = $product->get_price();
-			
-			if ( ( '' === $price || 0 == $price ) ) {
-				$_price = "Free!";
-				if ( class_exists( 'WC_Subscription_Downloads' )
-				&& count( WC_Subscription_Downloads::get_subscriptions( $product->id ) ) ) {
-					$_price = "Free with Membership!";
-				}				
+		public function filter_woo_price_free_with_subscription( $price, $product ) {
+			if ( self::is_free_with_sub( $product ) ) {
+				$price = "Free with Membership!";
 			}
 			
-			return $_price;
+			return $price;
+		}
+		
+		/**
+		 * When user has active subscription to download product, display links to download list on the product page
+		 * 
+		 * @param void
+		 * @return string HTML
+		 */
+		public function action_woo_available_downloads() {
+			global $product;
+			
+			$product_id = $product instanceof WC_Product ? $product->get_id() : 0;
+			
+			if ( ! is_user_logged_in() || ! $product->is_downloadable() || ! self::is_free_with_sub( $product) || ! current_user_can( 'wc_memberships_purchase_restricted_product', $product_id ) ) {
+				return;
+			}
+			
+			/**
+			 * Get endpoints for my-account page
+			 */
+			$endpoints = wc_get_account_menu_items();			
+			if ( ! array_key_exists( 'downloads', $endpoints ) ) {
+				return;
+			}
+			
+			$url = wc_get_account_endpoint_url( 'downloads' ); ?>
+			<p>This download is included with your active Membership.</p>
+			<p>View your <a href="<?php echo esc_url( $url ); ?>">available downloads</a> on your account page.</p>
+			<?php
+			return;
+		}
+		
+		/**
+		 * Is Product free and provided via a subscription?
+		 * 
+		 * @param WC_product $product
+		 * @return boolean
+		 */
+		private function is_free_with_sub( $product ) {
+			$product_id = $product instanceof WC_Product ? $product->get_id() : 0;
+			$price = $product instanceof WC_Product ? $product->get_price() : 0;
+
+			$subscriptions = class_exists( 'WC_Subscription_Downloads' ) ? WC_Subscription_Downloads::get_subscriptions( $product_id ) : array ();
+			
+			return ( 0 == $price && count( $subscriptions ) > 0 );
+		}
+		
+		/**
+		 * Products that are included in a subscription are not available for direct purchase
+		 * 
+		 * @param boolean $purchaseable
+		 * @param WC_product $product
+		 * @return boolean
+		 */
+		public function filter_woo_not_purchasable( $purchaseable, $product ) {
+			if ( self::is_free_with_sub( $product ) ) {
+				return false;
+			}
+			
+			return $purchaseable;
 		}
 
 		/**

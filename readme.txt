@@ -45,7 +45,8 @@ Just like any other plugin
 == Changelog ==
 
 = 0.7 =
-* Replace $0 costs with "Free!" or "Free with Membership!" when part of a subscription
+* Replace cost with "Free with Membership!" when part of a subscription
+* Provide link to download page from downloads included in membership
 
 = 0.6 =
 * WooCommerce does not auto-complete virtual subscriptions
