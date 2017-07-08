@@ -3,7 +3,7 @@
 Plugin Name: Puma Studios
 Plugin URI: https://github.com/KnBrckr/pumastudios
 Description: Site Specific Tweaks and Shortcodes
-Version: 0.7
+Version: 0.8
 Author: Kenneth J. Brucker
 Author URI: http://action-a-day.com
 Domain Path: /languages
@@ -112,7 +112,12 @@ if ( ! class_exists('pumastudios')) {
 			 * Add excerpt box to page edit screen
 			 */
 	     	add_post_type_support( 'page', 'excerpt' );
-
+			
+			/**
+			 * Include Featured Image in RSS Feeds
+			 */
+			add_filter( 'the_excerpt_rss', array( $this, 'filter_include_featured_image' ), 10, 1 );
+			add_filter( 'the_content_feed', array( $this, 'filter_include_featured_image' ), 10, 1 );
 		}
 
 		/**
@@ -369,6 +374,26 @@ if ( ! class_exists('pumastudios')) {
 			$data['post_name'] = $post_name;
 
 			return $data;
+		}
+		
+		/**
+		 * Add post thumbnail (featured image) to RSS feed
+		 * 
+		 * @global WP_post $post
+		 * @param string $content
+		 * @return string Content
+		 */
+		function filter_include_featured_image( $content ) {
+			global $post;
+			
+			if ( has_post_thumbnail( $post->ID ) ) {
+				/**
+				 * Add thumbnail to beginning of the content so it's included before excerpt or post content.
+				 */
+				$content = get_the_post_thumbnail( $post->ID, 'medium', array( 'style' => 'margin-bottom: 15px;' ) ) . $content;
+			}
+			
+			return $content;
 		}
 	}
 }

@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.7.4
-Stable tag: 0.2.3
+Stable tag: 0.8
 
 Various Short codes
 
@@ -43,6 +43,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.8 =
+* Add post featured image to RSS feeds
 
 = 0.7 =
 * Replace cost with "Free with Membership!" when part of a subscription
