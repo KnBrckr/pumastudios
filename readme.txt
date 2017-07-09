@@ -45,6 +45,7 @@ Just like any other plugin
 == Changelog ==
 
 = 0.8 =
+* Refactor Plugin to use loadable classes
 * Add post featured image to RSS feeds
 
 = 0.7 =
