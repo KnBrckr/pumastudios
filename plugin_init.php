@@ -65,13 +65,20 @@ spl_autoload_register( function ( $class_name ) {
 add_action( 'plugins_loaded', function () {
 	$plugin = new Plugin();
 
-	$plugin['version'] = '0.8';
-	$plugin['path']	 = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
-	$plugin['url']	 = plugin_dir_url( __FILE__ );
+	$plugin['version']	 = '0.8';
+	$plugin['path']		 = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
+	$plugin_dir_url		 = plugin_dir_url( __FILE__ );
+	$plugin['urls']	 = array(
+		'plugin' => $plugin_dir_url,
+		'js'	 => $plugin_dir_url . 'assets/js/',
+		'css'	 => $plugin_dir_url . 'assets/css/',
+		'fonts'	 => $plugin_dir_url . 'assets/fonts/',
+		'images' => $plugin_dir_url . 'assets/images/'
+	);
 
 	$plugin['sc_page_children']	 = new AAD\SiteTweaks\pageChildren();
-	$plugin['thrive_tweaks']		 = new AAD\SiteTweaks\thriveTweaks();
-	$plugin['rss']				 = new AAD\SiteTweaks\rssHandler;
+	$plugin['thrive_tweaks']	 = new AAD\SiteTweaks\thriveTweaks();
+	$plugin['rss']				 = new AAD\SiteTweaks\rssHandler( $plugin['urls'] );
 
 	if ( class_exists( 'WooCommerce', false ) ) {
 		$plugin ['woo_tweaks'] = new AAD\SiteTweaks\wooTweaks();

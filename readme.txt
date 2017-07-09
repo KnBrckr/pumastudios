@@ -47,6 +47,7 @@ Just like any other plugin
 = 0.8 =
 * Refactor Plugin to use loadable classes
 * Add post featured image to RSS feeds
+* Filter selected categories from RSS feed
 
 = 0.7 =
 * Replace cost with "Free with Membership!" when part of a subscription
