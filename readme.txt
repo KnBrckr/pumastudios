@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.7.4
-Stable tag: 0.8
+Stable tag: 0.8.1
 
 Various Short codes
 
@@ -43,6 +43,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.8.1 =
+* Fix Invalid argument supplied for foreach()
 
 = 0.8 =
 * Refactor Plugin to use loadable classes

@@ -110,13 +110,15 @@ class rssHandler {
 		 */
 		if ( $query->is_feed() && !$query->is_category() ) {
 			$categories_in_feed = get_option( 'aad_categories_in_feed' );
+			if ( $categories_in_feed !== FALSE ) {
 			$exclude_cat_ids = array();
 			foreach ( $categories_in_feed as $term_id => $in_feed ) {
 				if ($in_feed) continue; // Skip categories that are included in feed
 			
 				array_push( $exclude_cat_ids, $term_id );
 			}
-			$query->set( 'category__not_in', $exclude_cat_ids );
+			$query->set( 'category__not_in', $exclude_cat_ids );				
+			}
 		}
 
 		return $query;
