@@ -4,7 +4,7 @@
   Plugin Name: Puma Studios
   Plugin URI: https://github.com/KnBrckr/pumastudios
   Description: Site Specific Tweaks and Shortcodes
-  Version: 0.8
+  Version: 0.8.1
   Author: Kenneth J. Brucker
   Author URI: http://action-a-day.com
   License:     GPL2
@@ -65,7 +65,7 @@ spl_autoload_register( function ( $class_name ) {
 add_action( 'plugins_loaded', function () {
 	$plugin = new Plugin();
 
-	$plugin['version']	 = '0.8';
+	$plugin['version']	 = '0.8.1';
 	$plugin['path']		 = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 	$plugin_dir_url		 = plugin_dir_url( __FILE__ );
 	$plugin['urls']	 = array(
