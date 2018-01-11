@@ -3,8 +3,8 @@ Contributors: draca
 Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
-Tested up to: 4.7.4
-Stable tag: 0.8.1
+Tested up to: 4.9.1
+Stable tag: 0.9
 
 Various Short codes
 
@@ -12,12 +12,14 @@ Various Short codes
 
 Supports the following shortcodes:
 
-= [page-children class=<class> page_id=<id> order_by=<order>]
+= [page-children class=<class> parent=<id> children_of=<id> order_by=<order>]
 
 class defaults to 'page-children'
-page_id defaults to the current page
+parent return pages whose parent is this page, defaults to current page
+children_of return pages, including grand-children, of this page
 order_by defaults to 'title', can be 'title', 'date', or 'order'
   'order' will order by page order setting on the pages.
+page_id has been deprecated in favor of parent
 
 Also takes care of various fixups:
 
@@ -43,6 +45,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.9 =
+* Allow page-children to locate all grand-children of a page
 
 = 0.8.1 =
 * Fix Invalid argument supplied for foreach()

@@ -62,7 +62,15 @@ class pageChildren {
 	 *
 	 * Implements shortcode [page-children]
 	 *
-	 * [page-children class=<class> page_id=<id> order_by=<order>]
+	 * [page-children class=<class> page_id=<id> order_by=<order> children_of=<id> parent=<id>]
+	 * 
+	 *   class			string, class to include on list
+	 *   parent			integer, list pages that have the provided single page as their parent.
+	 *   page_id		integer, deprecated form of parent
+	 *   children_of	integer, list all children of provided single page, including grand-children
+	 *	 order_by		string, field to order list by
+	 * 
+	 *   Only one of parent, children_of or page_id should be specified. They will be used in that order.
 	 *
 	 * @return text HTML list containing entries for each child of the current page.
 	 * */
@@ -73,32 +81,78 @@ class pageChildren {
 		 * Retrieve shortcode attributes
 		 */
 		extract( shortcode_atts( array(
-			"page_id"	 => $id,
-			"class"		 => 'page-children',
-			"order_by"	 => 'title'
+			"page_id"		 => $id,
+			"parent"		 => -1,
+			"children_of"	 => -1,
+			"class"			 => 'page-children',
+			"order_by"		 => 'post_title'
 		), $atts ) );
 
 		/**
 		 * Sanitize fields
 		 */
 		$page_id	 = (int) $page_id;
-		$order_by	 = in_array( $order_by, array( 'title', 'order', 'date' ) ) ? $order_by : 'title';
-		if ( 'order' == $order_by )
-			$order_by	 = 'menu_order';
+		$parent		 = (int) $parent;
+		$children_of = (int) $children_of;
+		
+		switch ( $order_by ) {
+			case 'title':
+				$order_by	 = 'post_title';
+				// fall thru
+			case 'post_title':
+				break;
+			case 'order':
+				$order_by	 = 'menu_order';
+				// fall thru
+			case 'menu_order':
+				break;
+			case 'date':
+				$order_by	 = 'post_date';
+			case 'post_date':
+				break;
+			default:
+				$order_by	 = 'post_title';
+		}
+		
+		/**
+		 * What to search for ...
+		 */
+		$get_children_of = array(
+			'post_type'		 => 'page',
+			'sort_column'	 => $order_by,
+			'sort_order'	 => 'asc',
+			'post_status'	 => 'publish' );
+		
+		/**
+		 * Only one of page_id, parent or children_of should be specified.
+		 */
+		if ( $parent == -1 && $children_of == -1 ) {
+			$get_children_of['parent'] = $page_id;
+		} elseif ( $parent != -1 ) {
+			$get_children_of['parent'] = $parent;
+		} else {
+			$get_children_of['child_of'] = $children_of;
+			$get_children_of['hierarchical'] = false;
+		}
 
 		/**
 		 * Collect children of target page
 		 */
-		$children_of_page = get_children( array( "post_parent" => $page_id, "post_type" => "page", "orderby" => $order_by, "order" => "ASC", "post_status" => "publish" ) );
+		$children_of_page = get_pages( $get_children_of );
 		if ( empty( $children_of_page ) ) {
 			return "";
 		}
+		
+		usort($children_of_page, function($a, $b) {
+			return strcasecmp( $a->post_title, $b->post_title );
+		});
 
 		$text = "<ul class=" . esc_attr( $class ) . ">";
 		foreach ( $children_of_page as $child_post ) {
 			$text .= "<li><a href='" . get_bloginfo( 'wpurl' ) . "/" . get_page_uri( $child_post->ID ) . "'> $child_post->post_title </a></li>";
 		}
 		$text .= "</ul>";
+		
 		return $text;
 	}
 }
