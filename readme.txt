@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 0.9
+Stable tag: 0.9.1
 
 Various Short codes
 
@@ -45,6 +45,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.9.1 =
+* Sorting of Post Titles should ignore leading articles "a", "an" and "the"
 
 = 0.9 =
 * Allow page-children to locate all grand-children of a page

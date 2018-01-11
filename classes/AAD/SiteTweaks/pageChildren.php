@@ -42,7 +42,8 @@ class pageChildren {
 	 * 
 	 * @return void
 	 */
-	public function __construct( ) {
+	public function __construct() {
+		
 	}
 
 	/**
@@ -68,7 +69,7 @@ class pageChildren {
 	 *   parent			integer, list pages that have the provided single page as their parent.
 	 *   page_id		integer, deprecated form of parent
 	 *   children_of	integer, list all children of provided single page, including grand-children
-	 *	 order_by		string, field to order list by
+	 * 	 order_by		string, field to order list by
 	 * 
 	 *   Only one of parent, children_of or page_id should be specified. They will be used in that order.
 	 *
@@ -94,16 +95,16 @@ class pageChildren {
 		$page_id	 = (int) $page_id;
 		$parent		 = (int) $parent;
 		$children_of = (int) $children_of;
-		
+
 		switch ( $order_by ) {
 			case 'title':
 				$order_by	 = 'post_title';
-				// fall thru
+			// fall thru
 			case 'post_title':
 				break;
 			case 'order':
 				$order_by	 = 'menu_order';
-				// fall thru
+			// fall thru
 			case 'menu_order':
 				break;
 			case 'date':
@@ -113,7 +114,7 @@ class pageChildren {
 			default:
 				$order_by	 = 'post_title';
 		}
-		
+
 		/**
 		 * What to search for ...
 		 */
@@ -122,7 +123,7 @@ class pageChildren {
 			'sort_column'	 => $order_by,
 			'sort_order'	 => 'asc',
 			'post_status'	 => 'publish' );
-		
+
 		/**
 		 * Only one of page_id, parent or children_of should be specified.
 		 */
@@ -131,7 +132,7 @@ class pageChildren {
 		} elseif ( $parent != -1 ) {
 			$get_children_of['parent'] = $parent;
 		} else {
-			$get_children_of['child_of'] = $children_of;
+			$get_children_of['child_of']	 = $children_of;
 			$get_children_of['hierarchical'] = false;
 		}
 
@@ -142,17 +143,25 @@ class pageChildren {
 		if ( empty( $children_of_page ) ) {
 			return "";
 		}
-		
-		usort($children_of_page, function($a, $b) {
-			return strcasecmp( $a->post_title, $b->post_title );
-		});
+
+		/**
+		 * Sort result, omit 
+		 */
+		if ( $order_by == "post_title" ) {
+			usort( $children_of_page, function($a, $b) {
+				$title_a = preg_replace( '/^(a|an|the) /i', '', $a->post_title );
+				$title_b = preg_replace( '/^(a|an|the) /i', '', $b->post_title );
+				return strcasecmp( $title_a, $title_b );
+			} );
+		}
 
 		$text = "<ul class=" . esc_attr( $class ) . ">";
 		foreach ( $children_of_page as $child_post ) {
 			$text .= "<li><a href='" . get_bloginfo( 'wpurl' ) . "/" . get_page_uri( $child_post->ID ) . "'> $child_post->post_title </a></li>";
 		}
 		$text .= "</ul>";
-		
+
 		return $text;
 	}
+
 }
