@@ -145,13 +145,14 @@ class pageChildren {
 		}
 
 		/**
-		 * Sort result, omit 
+		 * Natural sort by post_title, omit leading articles and non-word characters
 		 */
 		if ( $order_by == "post_title" ) {
 			usort( $children_of_page, function($a, $b) {
-				$title_a = preg_replace( '/^(a|an|the) /i', '', $a->post_title );
-				$title_b = preg_replace( '/^(a|an|the) /i', '', $b->post_title );
-				return strcasecmp( $title_a, $title_b );
+				$ignore_prefix = '/^\W*(?:(?:a|an|the) )?\W*/i';
+				$title_a = preg_replace( $ignore_prefix, '', $a->post_title );
+				$title_b = preg_replace( $ignore_prefix, '', $b->post_title );
+				return strnatcasecmp( $title_a, $title_b );
 			} );
 		}
 
