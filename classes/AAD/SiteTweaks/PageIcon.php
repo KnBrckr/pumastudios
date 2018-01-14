@@ -18,6 +18,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*
+ * Some content based on https://codex.wordpress.org/Javascript_Reference/wp.media
+ */
+
 namespace AAD\SiteTweaks;
 
 /**
@@ -65,16 +69,39 @@ class PageIcon {
 	private $js_handle;
 	
 	/**
+	 * CSS Handle, defined based on plugin name
+	 */
+	private $css_handle;
+	
+	/**
+	 * Post Meta Data slug for storing image id
+	 */
+	const META_DATA_SLUG = 'aad_page_icon_img_id';
+	
+	/**
+	 * nonce used to protect metabox save from possible abuse
+	 */
+	private $nonce;
+	
+	/**
+	 * nonce action associated with nonce
+	 */
+	private $nonce_action;
+	
+	/**
 	 * Instantiate
 	 * 
 	 * @return void
 	 */
 	public function __construct( $version, $name, $urls ) {
-		$this->version = $version;
-		$this->name = $name;
-		$this->urls = $urls;
-		$this->metabox_id = $name . '-page-icon-metabox';
-		$this->js_handle = $name . '-page-icon-js';
+		$this->version		 = $version;
+		$this->name			 = $name;
+		$this->urls			 = $urls;
+		$this->metabox_id	 = $name . '-page-icon-metabox';
+		$this->js_handle	 = $name . '-page-icon-js';
+		$this->css_handle	 = $name . '-page-icon-css';
+		$this->nonce		 = $name . 'page-icon-nonce';
+		$this->nonce_action	 = $name . 'page-icon-meta-box';
 	}
 
 	/**
@@ -86,8 +113,10 @@ class PageIcon {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array($this, 'action_admin_enqueue_scripts') );
 			add_action( 'add_meta_boxes', array($this, 'action_register_meta_boxes') );
+			add_action( 'save_post', array($this, 'save_meta_box'), 10, 1 );
 		} else { // Don't filter post titles on admin screens
 			add_filter( 'the_title', array($this, 'filter_add_icon'), 10, 2);
+			add_action( 'wp_enqueue_scripts', array($this, 'action_enqueue_style') );
 		}
 	}
 
@@ -109,7 +138,7 @@ class PageIcon {
 			$this->js_handle,						// Script Handle
 			$this->urls['js'] . 'page-icon.js',		// Javascript source
 			array('jquery-core'),					// Dependencies
-			$this->version,							// Script version
+			$this->version,							// Script version for cache busting
 			false									// In footer?
 		);
 		
@@ -118,6 +147,18 @@ class PageIcon {
 		) );
 		
 		wp_enqueue_script( $this->js_handle );
+	}
+	
+	/**
+	 * Enqueue CSS Style
+	 */
+	function action_enqueue_style() {
+		wp_enqueue_style( 
+			$this->css_handle,						// CSS Handle
+			$this->urls['css'] . 'page-icon.css',	// CSS Source
+			array(),								// Dependencies
+			$this->version							// Version for cache busting
+		);
 	}
 	
 	/**
@@ -140,12 +181,14 @@ class PageIcon {
 	 */
 	public function render_meta_box() {
 		global $post;
+		
+		wp_nonce_field( $this->nonce_action, $this->nonce);
 
 		// Get WordPress' media upload URL
 		$upload_link = esc_url( get_upload_iframe_src( 'image', $post->ID ) );
 
 		// See if there's a media id already saved as post meta
-		$icon_img_id = get_post_meta( $post->ID, 'icon_img_id', true );
+		$icon_img_id = get_post_meta( $post->ID, self::META_DATA_SLUG, true );
 		$you_have_img = $icon_img_id != "";
 
 		// Get the image src, treat as an icon
@@ -172,15 +215,27 @@ class PageIcon {
 		    </a>
 		</p>
 
-		<input class="page-icon-img-id" name="icon-img-id" type="hidden" value="<?php echo esc_attr( $icon_img_id ); ?>" />
+		<input class="page-icon-img-id" name="page-icon-img-id" type="hidden" value="<?php echo esc_attr( $icon_img_id ); ?>" />
 		<?php
 	}
 
 	/**
 	 * Save page icon as post meta data
+	 *
+	 * @param int     $post_id  The Post id
+	 * @return void
 	 */
-	public function save_meta_box() {
+	public function save_meta_box($post_id) {
+		if ( ! Plugin::verify_save( $this->nonce, $this->nonce_action, $post_id ) ) {
+			return;
+		}
 		
+		$img_id = filter_input( INPUT_POST, 'page-icon-img-id' );
+		if ( $img_id && is_numeric($img_id) ) {
+			update_post_meta( $post_id, self::META_DATA_SLUG, $img_id);
+		} elseif ( $img_id == "" ) {
+			delete_post_meta( $post_id, self::META_DATA_SLUG );
+		}
 	}
 	
 	/**
@@ -191,7 +246,18 @@ class PageIcon {
 	 * @return string Filtered Post Title
 	 */
 	public function filter_add_icon( $title, $id ) {
-		return "f: " . $title;
+		
+		// Retrieve 
+		$icon_img_id = get_post_meta( $id, self::META_DATA_SLUG, true );
+		
+		if ( ! $icon_img_id != "" ) {
+			return $title;
+		}
+		
+		// Get the image src, treat as an icon
+		$icon_img_src = wp_get_attachment_image_src( $icon_img_id, 'thumbnail', true );
+
+		return '<img class="page-icon" src="' . $icon_img_src[0] . '">' . $title;
 	}
+
 }
-	
