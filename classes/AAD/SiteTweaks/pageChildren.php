@@ -158,7 +158,9 @@ class pageChildren {
 
 		$text = "<ul class=" . esc_attr( $class ) . ">";
 		foreach ( $children_of_page as $child_post ) {
-			$text .= "<li><a href='" . get_bloginfo( 'wpurl' ) . "/" . get_page_uri( $child_post->ID ) . "'> $child_post->post_title </a></li>";
+			$text .= "<li><a href='" . get_bloginfo( 'wpurl' ) . "/" . get_page_uri( $child_post->ID ) . "'> ";
+			$text .= get_the_title( $child_post->ID );
+			$text .= "</a></li>";
 		}
 		$text .= "</ul>";
 
