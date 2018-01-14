@@ -28,7 +28,6 @@
 
 namespace AAD\SiteTweaks;
 
-
 /*
  *  Protect from direct execution
  */
@@ -40,17 +39,56 @@ if ( !defined( 'WP_PLUGIN_DIR' ) ) {
 
 class Plugin extends Container {
 
-	public function run(){ 
-    foreach( $this->values as $key => $content ){ // Loop on contents
-      if( is_callable($content) ){
-        $content = $this[$key];
-      }
-      if( is_object( $content ) ){
-        $reflection = new \ReflectionClass( $content );
-        if( $reflection->hasMethod( 'run' ) ){
-          $content->run(); // Call run method on object
-        }
-      }
-    }
-  }
+	public function run() {
+		foreach ( $this->values as $key => $content ) { // Loop on contents
+			if ( is_callable( $content ) ) {
+				$content = $this[$key];
+			}
+			if ( is_object( $content ) ) {
+				$reflection = new \ReflectionClass( $content );
+				if ( $reflection->hasMethod( 'run' ) ) {
+					$content->run(); // Call run method on object
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Performs meta box save validation
+	 *
+	 * @param $nonce_name
+	 * @param $nonce_action
+	 * @param $post_id
+	 *
+	 * @return bool
+	 */
+	public static function verify_save( $nonce_name, $nonce_action, $post_id ) {
+		// Validate provided nonce
+		$nonce = filter_input( INPUT_POST, $nonce_name);
+		if ( ! $nonce ) {
+			return false;
+		}
+		if ( ! wp_verify_nonce( $nonce, $nonce_action ) ) {
+			return false;
+		}
+		
+		// Ignore request if part of an auto-save
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return false;
+		}
+		
+		// Validate permissions
+		if ( ! current_user_can( 'edit_page', $post_id ) ) {
+			return false;
+		}
+		
+		// check if there was a multisite switch before
+		if ( is_multisite() && ms_is_switched() ) {
+			return false;
+		}
+
+		// A-OK!
+		return true;
+	}
+
 }
