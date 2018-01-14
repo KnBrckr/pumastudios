@@ -4,7 +4,7 @@
   Plugin Name: Puma Studios
   Plugin URI: https://github.com/KnBrckr/pumastudios
   Description: Site Specific Tweaks and Shortcodes
-  Version: 0.9.2
+  Version: 0.10
   Author: Kenneth J. Brucker
   Author URI: http://action-a-day.com
   License:     GPL2
@@ -64,8 +64,9 @@ spl_autoload_register( function ( $class_name ) {
  */
 add_action( 'plugins_loaded', function () {
 	$plugin = new Plugin();
-
-	$plugin['version']	 = '0.9.2';
+	
+	$plugin['name']		 = trim( dirname( plugin_basename( __FILE__ ) ), '/' );
+	$plugin['version']	 = '0.10';
 	$plugin['path']		 = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 	$plugin_dir_url		 = plugin_dir_url( __FILE__ );
 	$plugin['urls']	 = array(
@@ -75,10 +76,10 @@ add_action( 'plugins_loaded', function () {
 		'fonts'	 => $plugin_dir_url . 'assets/fonts/',
 		'images' => $plugin_dir_url . 'assets/images/'
 	);
-
 	$plugin['sc_page_children']	 = new AAD\SiteTweaks\pageChildren();
 	$plugin['thrive_tweaks']	 = new AAD\SiteTweaks\thriveTweaks();
 	$plugin['rss']				 = new AAD\SiteTweaks\rssHandler( $plugin['urls'] );
+	$plugin['page_icon']		 = new AAD\SiteTweaks\PageIcon( $plugin['version'], $plugin['name'], $plugin['urls'] );
 
 	if ( class_exists( 'WooCommerce', false ) ) {
 		$plugin ['woo_tweaks'] = new AAD\SiteTweaks\wooTweaks();

@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 0.9.2
+Stable tag: 0.10
 
 Various Short codes
 
@@ -46,9 +46,13 @@ Just like any other plugin
 
 == Changelog ==
 
+= 0.10 =
+* Add support to include a page icon where page titles are displayed
+* FIX: [page-children] does not display filtered post title
+
 = 0.9.2 =
-* Leading non-word characters cause unexpected sort order
-* Titles with numbers not sorted in a natural order
+* FIX: Leading non-word characters cause unexpected sort order
+* FIX: Titles with numbers not sorted in a natural order
 
 = 0.9.1 =
 * Sorting of Post Titles should ignore leading articles "a", "an" and "the"
