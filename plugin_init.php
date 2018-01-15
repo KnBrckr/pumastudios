@@ -4,7 +4,7 @@
   Plugin Name: Puma Studios
   Plugin URI: https://github.com/KnBrckr/pumastudios
   Description: Site Specific Tweaks and Shortcodes
-  Version: 0.10
+  Version: 0.11
   Author: Kenneth J. Brucker
   Author URI: http://action-a-day.com
   License:     GPL2
@@ -30,7 +30,7 @@
 
 /**
  * @package AAD\SiteTweaks
- * 
+ *
  * Uses the Pimple framework defined at https://pimple.sensiolabs.org
  */
 /**
@@ -64,9 +64,9 @@ spl_autoload_register( function ( $class_name ) {
  */
 add_action( 'plugins_loaded', function () {
 	$plugin = new Plugin();
-	
+
 	$plugin['name']		 = trim( dirname( plugin_basename( __FILE__ ) ), '/' );
-	$plugin['version']	 = '0.10';
+	$plugin['version']	 = '0.11';
 	$plugin['path']		 = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 	$plugin_dir_url		 = plugin_dir_url( __FILE__ );
 	$plugin['urls']	 = array(
@@ -86,7 +86,7 @@ add_action( 'plugins_loaded', function () {
 	}
 
 	/*
-	 * 
+	 *
 	 * Instantiate needed plugin classes
 
 	  $variationTableService = function ($product) {

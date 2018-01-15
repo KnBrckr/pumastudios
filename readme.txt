@@ -12,13 +12,14 @@ Various Short codes
 
 Supports the following shortcodes:
 
-= [page-children class=<class> parent=<id> children_of=<id> order_by=<order>]
+= [page-children class=<class> parent=<id> children_of=<id> order_by=<order> exclude=<id list>]
 
-class defaults to 'page-children'
-parent return pages whose parent is this page, defaults to current page
-children_of return pages, including grand-children, of this page
-order_by defaults to 'title', can be 'title', 'date', or 'order'
+class: defaults to 'page-children'
+parent: return pages whose parent is this page, defaults to current page
+children_of:  return pages, including grand-children, of this page
+order_by: defaults to 'title', can be 'title', 'date', or 'order'
   'order' will order by page order setting on the pages.
+exclude: exclude given comma separated list of page ids from list
 page_id has been deprecated in favor of parent
 
 Also takes care of various fixups:
@@ -45,6 +46,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.11 =
+* Add [page-children exclude] option to exclude given pages from list
 
 = 0.10 =
 * Add support to include a page icon where page titles are displayed

@@ -22,7 +22,7 @@ namespace AAD\SiteTweaks;
 
 /**
  * Description of pageChildren
- * 
+ *
  * @package AAD\SiteTweaks
  * @author Kenneth J. Brucker <ken.brucker@action-a-day.com>
  */
@@ -39,16 +39,16 @@ class pageChildren {
 
 	/**
 	 * Instantiate
-	 * 
+	 *
 	 * @return void
 	 */
 	public function __construct() {
-		
+
 	}
 
 	/**
 	 * Plug into WP
-	 * 
+	 *
 	 * @return void
 	 */
 	public function run() {
@@ -64,13 +64,14 @@ class pageChildren {
 	 * Implements shortcode [page-children]
 	 *
 	 * [page-children class=<class> page_id=<id> order_by=<order> children_of=<id> parent=<id>]
-	 * 
+	 *
 	 *   class			string, class to include on list
 	 *   parent			integer, list pages that have the provided single page as their parent.
 	 *   page_id		integer, deprecated form of parent
 	 *   children_of	integer, list all children of provided single page, including grand-children
 	 * 	 order_by		string, field to order list by
-	 * 
+	 *   exclude		string, comma separated list of page ids to exclude from list. Children of these pages will be included
+	 *
 	 *   Only one of parent, children_of or page_id should be specified. They will be used in that order.
 	 *
 	 * @return text HTML list containing entries for each child of the current page.
@@ -86,7 +87,8 @@ class pageChildren {
 			"parent"		 => -1,
 			"children_of"	 => -1,
 			"class"			 => 'page-children',
-			"order_by"		 => 'post_title'
+			"order_by"		 => 'post_title',
+			"exclude"		 => ''
 		), $atts ) );
 
 		/**
@@ -114,6 +116,14 @@ class pageChildren {
 			default:
 				$order_by	 = 'post_title';
 		}
+
+		/**
+		 * Trim elements of white space, only include those that are numeric
+		 */
+		$exclude_ids = \array_filter(
+			\array_map( function($a) { return \trim($a); } , \explode( ',', $exclude ) ),
+			function($a) { return \is_numeric($a); }
+		);
 
 		/**
 		 * What to search for ...
@@ -158,6 +168,9 @@ class pageChildren {
 
 		$text = "<ul class=" . esc_attr( $class ) . ">";
 		foreach ( $children_of_page as $child_post ) {
+			if ( \in_array( $child_post->ID, $exclude_ids ) ) {
+				continue;
+			}
 			$text .= "<li><a href='" . get_bloginfo( 'wpurl' ) . "/" . get_page_uri( $child_post->ID ) . "'> ";
 			$text .= get_the_title( $child_post->ID );
 			$text .= "</a></li>";
