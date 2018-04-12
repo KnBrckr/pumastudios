@@ -47,6 +47,9 @@ Just like any other plugin
 
 == Changelog ==
 
+= 0.12 =
+* autofocus causes some browsers to auto-scroll to the focus field, results in not seeing beginning page content
+
 = 0.11 =
 * Add [page-children exclude] option to exclude given pages from list
 
