@@ -64,8 +64,8 @@ class wooTweaks {
 		/**
 		 * autofocus causes some browsers to auto-scroll to the focus field, results in not seeing beginning page content
 		 */
-		add_filter( 'woocommerce_billing_fields', [ $this, 'filter_remove_autofocus' ], 10, 2);
-		add_filter( 'woocommerce_shipping_fields', [ $this, 'filter_remove_autofocus' ], 10, 2);
+		add_filter( 'woocommerce_billing_fields', [ $this, 'filter_remove_autofocus' ], 10, 2 );
+		add_filter( 'woocommerce_shipping_fields', [ $this, 'filter_remove_autofocus' ], 10, 2 );
 
 		/**
 		 * Change Backorder text
@@ -137,9 +137,8 @@ class wooTweaks {
 	 * @param mixed $country Country
 	 * @return array Updated address fields
 	 */
-	function filter_remove_autofocus( $address_fields, $country )
-	{
-		if ( array_key_exists( 'billing_first_name' , $address_fields ) ) {
+	function filter_remove_autofocus( $address_fields, $country ) {
+		if ( array_key_exists( 'billing_first_name', $address_fields ) ) {
 			$address_fields['billing_first_name']['autofocus'] = false;
 		} elseif ( array_key_exists( 'shipping_first_name', $address_fields ) ) {
 			$address_fields['shipping_first_name']['autofocus'] = false;
