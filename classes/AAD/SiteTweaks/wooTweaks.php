@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2017 Kenneth J. Brucker <ken.brucker@action-a-day.com>
+ * Copyright (C) 2018 Kenneth J. Brucker <ken.brucker@pumastudios.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@ namespace AAD\SiteTweaks;
 
 /**
  * Description of wooTweaks
- * 
+ *
  * @package AAD\SiteTweaks
  * @author Kenneth J. Brucker <ken.brucker@action-a-day.com>
  */
@@ -38,16 +38,16 @@ class wooTweaks {
 
 	/**
 	 * Instantiate
-	 * 
+	 *
 	 * @return void
 	 */
 	public function __construct() {
-		
+
 	}
 
 	/**
 	 * Plug into WP
-	 * 
+	 *
 	 * @return void
 	 */
 	public function run() {
@@ -60,6 +60,12 @@ class wooTweaks {
 		 * Virtual Subscription product types do not need to be processed
 		 */
 		add_filter( 'woocommerce_order_item_needs_processing', array( $this, 'filter_woo_item_needs_processing' ), 10, 3 );
+
+		/**
+		 * autofocus causes some browsers to auto-scroll to the focus field, results in not seeing beginning page content
+		 */
+		add_filter( 'woocommerce_billing_fields', [ $this, 'filter_remove_autofocus' ], 10, 2);
+		add_filter( 'woocommerce_shipping_fields', [ $this, 'filter_remove_autofocus' ], 10, 2);
 
 		/**
 		 * Change Backorder text
@@ -104,9 +110,9 @@ class wooTweaks {
 	/**
 	 * Virtual Subscription products do not need to be processed after payment is received. They can move
 	 * directly to the 'completed' status.
-	 * 
+	 *
 	 * Uses filter defined in class-wc-order.php:needs_processing()
-	 * 
+	 *
 	 * @param boolean $needs_processing default return value to pass along
 	 * @param WC_product $product Product item to check
 	 * @param string $order_ID ID for the containing order
@@ -119,6 +125,27 @@ class wooTweaks {
 		}
 
 		return $needs_processing;
+	}
+
+	/**
+	 * Woocommerce defaults to adding autofocus to the First name field of addresses.Autofocus causes some browsers to
+	 * auto-scroll to the focus field, results in not seeing beginning page content.
+	 *
+	 * Uses filter defined in class_wc_countries.php:get_address_fields()
+	 *
+	 * @param array $address_fields Array of address fields
+	 * @param mixed $country Country
+	 * @return array Updated address fields
+	 */
+	function filter_remove_autofocus( $address_fields, $country )
+	{
+		if ( array_key_exists( 'billing_first_name' , $address_fields ) ) {
+			$address_fields['billing_first_name']['autofocus'] = false;
+		} elseif ( array_key_exists( 'shipping_first_name', $address_fields ) ) {
+			$address_fields['shipping_first_name']['autofocus'] = false;
+		}
+
+		return $address_fields;
 	}
 
 	/**
@@ -138,7 +165,7 @@ class wooTweaks {
 
 	/**
 	 * If product is included via subscription, indicate so
-	 * 
+	 *
 	 * @param string $_price HTML text to display for price
 	 * @param WC_Product $product
 	 * @return string HTML text to display for price
@@ -153,7 +180,7 @@ class wooTweaks {
 
 	/**
 	 * When user has active subscription to download product, display links to download list on the product page
-	 * 
+	 *
 	 * @param void
 	 * @return string HTML
 	 */
@@ -184,7 +211,7 @@ class wooTweaks {
 
 	/**
 	 * Is Product free and provided via a subscription?
-	 * 
+	 *
 	 * @param WC_product $product
 	 * @return boolean
 	 */
@@ -199,7 +226,7 @@ class wooTweaks {
 
 	/**
 	 * Products that are included in a subscription are not available for direct purchase
-	 * 
+	 *
 	 * @param boolean $purchaseable
 	 * @param WC_product $product
 	 * @return boolean
