@@ -1,7 +1,7 @@
 {
 	"name": "pumastudios/pumastudios",
 	"description": "Site Specific Tweaks and Shortcodes",
-	"version": "0.12"
+	"version": "0.12",
 	"keywords": ["wordpress",
 		"plugin", "tweaks"],
 	"homepage": "https://pumastudios.com",
