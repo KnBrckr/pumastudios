@@ -1,7 +1,6 @@
 {
 	"name": "pumastudios/pumastudios",
 	"description": "Site Specific Tweaks and Shortcodes",
-	"version": "0.12",
 	"keywords": ["wordpress",
 		"plugin", "tweaks"],
 	"homepage": "https://pumastudios.com",
@@ -16,6 +15,6 @@
 	"type": "wordpress-plugin",
 	"require": {
 		"php": ">=5.3.2",
-		"composer/installers": "v1.0.6"
+		"composer/installers": "^1.0"
 	}
 }
