@@ -4,7 +4,7 @@
   Plugin Name: Puma Studios
   Plugin URI: https://github.com/KnBrckr/pumastudios
   Description: Site Specific Tweaks and Shortcodes
-  Version: 0.12
+  Version: 0.13
   Author: Kenneth J. Brucker
   Author URI: http://pumastudios.com
   License:     GPL2

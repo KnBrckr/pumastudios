@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 0.12
+Stable tag: 0.13
 
 Various Short codes
 
@@ -29,6 +29,7 @@ Also takes care of various fixups:
 * Include excerpt box on page edit screen - Useful for member-only content
 * Auto-complete purchase of subscriptions for virtual products
 * Allow WooCommerce download files to be in alternate /content directory
+* Allow use of data-appointlet-organization on img tags in editor for Appointlet to function
 
 == Installation ==
 
@@ -46,6 +47,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.13 =
+* Wordpress editor filtering data-appointlet-organization attribute on img tags required by Appointlet calendar tool
 
 = 0.12 =
 * autofocus causes some browsers to auto-scroll to the focus field, results in not seeing beginning page content
