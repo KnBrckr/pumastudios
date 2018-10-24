@@ -10,7 +10,7 @@
   License:     GPL2
   License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-  Copyright: 2017 Kenneth J. Brucker (email: ken.brucker@action-a-day.com)
+  Copyright: 2018 Kenneth J. Brucker (email: ken.brucker@action-a-day.com)
 
   This file is part of pumastudios site modifications, a plugin for Wordpress.
 
@@ -80,6 +80,7 @@ add_action( 'plugins_loaded', function () {
 	$plugin['thrive_tweaks']	 = new AAD\SiteTweaks\thriveTweaks();
 	$plugin['rss']				 = new AAD\SiteTweaks\rssHandler( $plugin['urls'] );
 	$plugin['page_icon']		 = new AAD\SiteTweaks\PageIcon( $plugin['version'], $plugin['name'], $plugin['urls'] );
+	$plugin['appointlet_tweaks'] = new AAD\SiteTweaks\AppointletTweaks();
 
 	if ( class_exists( 'WooCommerce', false ) ) {
 		$plugin ['woo_tweaks'] = new AAD\SiteTweaks\wooTweaks();
