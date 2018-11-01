@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 0.13
+Stable tag: 0.13.1
 
 Various Short codes
 
@@ -47,6 +47,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.13.1 =
+* Some other independent update has addressed editor filtering of Appointlet required settings.
 
 = 0.13 =
 * Wordpress editor filtering data-appointlet-organization attribute on img tags required by Appointlet calendar tool
