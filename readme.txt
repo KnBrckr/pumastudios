@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 0.13.1
+Stable tag: 0.14
 
 Various Short codes
 
@@ -29,7 +29,6 @@ Also takes care of various fixups:
 * Include excerpt box on page edit screen - Useful for member-only content
 * Auto-complete purchase of subscriptions for virtual products
 * Allow WooCommerce download files to be in alternate /content directory
-* Allow use of data-appointlet-organization on img tags in editor for Appointlet to function
 
 == Installation ==
 
@@ -47,6 +46,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.14 =
+* Remove page icon support. Not 100% reliable to add html tags to post title.
 
 = 0.13.1 =
 * Some other independent update has addressed editor filtering of Appointlet required settings.
