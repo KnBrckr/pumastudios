@@ -4,7 +4,7 @@ Donate link: http://pumastudios.com/software/
 Tags: shortcodes
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 0.14
+Stable tag: 0.15
 
 Various Short codes
 
@@ -46,6 +46,9 @@ Just like any other plugin
 
 
 == Changelog ==
+
+= 0.15 =
+* Filter Genesis Copyright line
 
 = 0.14 =
 * Remove page icon support. Not 100% reliable to add html tags to post title.

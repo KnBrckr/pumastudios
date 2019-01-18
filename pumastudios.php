@@ -9,9 +9,9 @@
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
- * Copyright: 2018 Kenneth J. Brucker (email: ken.brucker@pumastudios.com)
+ * Copyright: (C) 2019 Kenneth J. Brucker (email: ken.brucker@pumastudios.com)
  *
- * This file is part of pumastudios site modifications, a plugin for Wordpress.
+ * This file is part of pumastudios site modifications, a plugin for WordPress.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
