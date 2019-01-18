@@ -32,7 +32,7 @@ function _manually_load_plugin() { // phpcs:ignore WordPress.NamingConventions.P
 	$real_dir                = dirname( dirname( __DIR__ ) );
 	$wp_plugin_paths[ $dir ] = $real_dir; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-	require dirname( dirname( __FILE__ ) ) . '/plugin_init.php';
+	require dirname( dirname( __FILE__ ) ) . '/pumastudios.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
