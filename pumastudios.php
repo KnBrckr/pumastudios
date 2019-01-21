@@ -68,7 +68,7 @@ add_action(
 		);
 		$plugin['sc_page_children'] = new AAD\SiteTweaks\pageChildren();
 		$plugin['thrive_tweaks']    = new AAD\SiteTweaks\thriveTweaks();
-		$plugin['rss']              = new AAD\SiteTweaks\rssHandler( $plugin['urls'] );
+		$plugin['rss'] = new AAD\SiteTweaks\RssHandler( $plugin['urls'] );
 		$plugin['Genesis']          = new \AAD\SiteTweaks\Genesis();
 
 		if ( class_exists( 'WooCommerce', false ) ) {
