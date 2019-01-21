@@ -3,7 +3,7 @@
  * Plugin Name: Puma Studios
  * Plugin URI: https://github.com/KnBrckr/pumastudios
  * Description: Site Specific Tweaks and Shortcodes
- * Version: 0.15
+ * Version: 0.15.1
  * Author: Kenneth J. Brucker
  * Author URI: http://pumastudios.com
  * License:     GPL2
@@ -56,7 +56,7 @@ add_action(
 		$plugin = new Plugin();
 
 		$plugin['name']             = trim( dirname( plugin_basename( __FILE__ ) ), '/' );
-		$plugin['version']          = '0.15';
+		$plugin['version']          = '0.15.1';
 		$plugin['path']             = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 		$plugin_dir_url             = plugin_dir_url( __FILE__ );
 		$plugin['urls']             = array(
@@ -68,7 +68,7 @@ add_action(
 		);
 		$plugin['sc_page_children'] = new AAD\SiteTweaks\pageChildren();
 		$plugin['thrive_tweaks']    = new AAD\SiteTweaks\thriveTweaks();
-		$plugin['rss'] = new AAD\SiteTweaks\RssHandler( $plugin['urls'] );
+		$plugin['rss']              = new AAD\SiteTweaks\RssHandler( $plugin['urls'] );
 		$plugin['Genesis']          = new \AAD\SiteTweaks\Genesis();
 
 		if ( class_exists( 'WooCommerce', false ) ) {
