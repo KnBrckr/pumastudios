@@ -26,5 +26,8 @@
 		"phpcompatibility/phpcompatibility-wp": "^2.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^v0.5",
 		"roave/security-advisories": "dev-master"
+    },
+  "scripts": {
+    "fix": "phpcbf --standard=WordPress --extensions=php"
 	}
 }
